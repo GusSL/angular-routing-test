@@ -8,29 +8,15 @@ import { AuthService } from '../_core/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  username: string = '';
+  password: string = '';
 
-  username: string = "";
-  password: string = "";
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(private authService: AuthService,
-    private router: Router) {}
-
-  ngOnInit() {
-    this.authService.currentUserSubject.subscribe(user => {
-      console.log(user);
-
-      if (user) {
-        this.router.navigate([user.role])
-      }
-      
-    })
-  }
+  ngOnInit() {}
 
   authenticate() {
-    console.log(this.username);
-    console.log(this.password);
     console.log(this.authService.login(this.username, this.password));
-    
+    this.router.navigate(['/']);
   }
-
 }

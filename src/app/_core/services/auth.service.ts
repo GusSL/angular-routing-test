@@ -1,36 +1,40 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   public currentUserSubject: BehaviorSubject<User | null>;
+  public currentUserType: string;
 
-  constructor() { 
+  constructor(private router: Router) {
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
-}
-
-login (username: string, password: string) {
-  if (username === "admin" && password === "admin") {
-    this.currentUserSubject.next(new User('Chad', 'admin'));
-    return true;
-  } else if (username === "user" && password === "user") {
-    this.currentUserSubject.next(new User('Maria', 'user'));
-    return true;
-  } else if (username === "guest" && password === "guest") {
-    this.currentUserSubject.next(new User('John', 'guest'));
-    return true;
   }
-  return false;
-}
 
-logout() {
-  this.currentUserSubject.next(null);
-  location.reload();
-}
+  login(username: string, password: string) {
+    if (username === 'admin' && password === 'admin') {
+      this.currentUserSubject.next(new User('Chad', 'admin'));
+      localStorage.setItem('user_type', 'admin');
+      return true;
+    } else if (username === 'user' && password === 'user') {
+      this.currentUserSubject.next(new User('Maria', 'user'));
+      localStorage.setItem('user_type', 'user');
+      return true;
+    } else if (username === 'guest' && password === 'guest') {
+      this.currentUserSubject.next(new User('John', 'guest'));
+      localStorage.setItem('user_type', 'guest');
+      return true;
+    }
+    return false;
+  }
 
+  logout() {
+    this.currentUserSubject.next(null);
+    localStorage.removeItem('user_type');
+    this.router.navigate(['/login']);
+  }
 }
 
 class User {
