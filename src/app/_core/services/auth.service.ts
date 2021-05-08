@@ -33,7 +33,10 @@ export class AuthService {
   logout() {
     this.currentUserSubject.next(null);
     localStorage.removeItem('user_type');
-    this.router.navigate(['/login']);
+
+    // Reload all the window to "unload" the last module
+    location.reload();
+    //this.router.navigate(['/login']);
   }
 }
 
